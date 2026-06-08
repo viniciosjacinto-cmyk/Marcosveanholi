@@ -1,30 +1,22 @@
-# Marcosveanholi
+# Marcosveanholi — Lista de Tarefas
 
-Repositório oficial do projeto **Marcosveanholi**.
+App de lista de tarefas para celular, funciona direto no navegador e pode ser instalado na tela inicial.
 
-## Sobre
+## Funcionalidades
 
-Este repositório reúne o código-fonte e a documentação do projeto Marcosveanholi. O desenvolvimento segue um fluxo baseado em branches e Pull Requests para garantir revisão e rastreabilidade de todas as mudanças.
+- Adicionar tarefas
+- Marcar como concluída
+- Deletar tarefas
+- Dados salvos automaticamente (não perde ao fechar)
+- Funciona offline
+- Instalável no celular (PWA)
 
 ## Como usar
 
-```bash
-# Clone o repositório
-git clone https://github.com/viniciosjacinto-cmyk/marcosveanholi.git
+Abra o `index.html` no navegador — ou acesse pelo link do GitHub Pages se estiver publicado.
 
-# Acesse o diretório
-cd marcosveanholi
-```
+No celular, toque em **"Adicionar à tela inicial"** para instalar como app.
 
-> Instruções de instalação e execução serão adicionadas conforme o projeto evoluir.
+## Tecnologia
 
-## Contribuindo
-
-1. Crie uma branch a partir de `main`: `git checkout -b feat/minha-feature`
-2. Faça suas alterações e commite: `git commit -m "feat: descrição da mudança"`
-3. Envie a branch: `git push origin feat/minha-feature`
-4. Abra um Pull Request para revisão
-
-## Licença
-
-A definir.
+HTML + CSS + JavaScript puro, sem dependências. Dados salvos no `localStorage`.
