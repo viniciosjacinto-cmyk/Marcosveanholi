@@ -1,0 +1,23 @@
+{
+  "skill_name": "questao-unifesp",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Simula uma questão de abdome agudo no estilo UNIFESP",
+      "expected_output": "Uma questão com enunciado clínico completo (paciente com idade/sexo/queixa/evolução/exame físico/exames complementares), 5 alternativas plausíveis (A-E), aguardando resposta do usuário antes de revelar o gabarito. Deve conter o cabeçalho de tema e subtópico.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Me testa em trauma. Pode ser uma questão difícil",
+      "expected_output": "Uma questão de trauma com armadilha clínica (distratores sutis que exigem raciocínio além da memorização). Cenário realista de emergência com dados vitais específicos. 5 alternativas com pelo menos 2 tentadoras. Aguarda resposta antes do gabarito.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Quero uma questão de câncer gástrico e depois vou responder B",
+      "expected_output": "Uma questão sobre câncer gástrico (estadiamento, conduta cirúrgica ou adjuvância). Após o usuário responder 'B', deve fornecer feedback completo: se correto ou errado, análise das 5 alternativas, Pearl UNIFESP e oferta de próxima questão.",
+      "files": []
+    }
+  ]
+}

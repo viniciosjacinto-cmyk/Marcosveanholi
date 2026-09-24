@@ -1,0 +1,20 @@
+{
+  "skill_name": "anti-alucinacao-ia",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Verifica esse output do ChatGPT antes de eu usar:\n\n\"Para dor pós-operatória em adultos após colecistectomia laparoscópica, pode-se usar Dipirona 1g IV de 6/6h + Cetoprofeno 100mg IV de 12/12h. Se dor intensa, morfina 0,1mg/kg IV pode ser adicionada. O protocolo ERAS recomenda que o paciente saia do hospital em 23h na maioria dos casos.\"\n\nPaciente: homem, 52 anos, TFG estimada 28 mL/min/1,73m², sem alergias conhecidas.",
+      "expected_output": "Análise nos 5 passos: deve identificar risco alto de AINE (cetoprofeno) em paciente com TFG 28 (ERC estágio 3b/4), dose de morfina a confirmar, citar omissões (monitorização da função renal, alternativa analgésica nefrosegura), classificar risco como ALTO e recomendar verificação antes de prescrever."
+    },
+    {
+      "id": 2,
+      "prompt": "Me passa o output do Claude que gerei:\n\n\"Apendicectomia videolaparoscópica: tempo cirúrgico médio de 25-45 minutos. Mortalidade global de 0,1-0,3%. Taxa de conversão para cirurgia aberta em torno de 5-10%. Segundo estudo CODA trial publicado no NEJM em 2020, antibióticos são equivalentes à cirurgia para apendicite não complicada, com taxa de sucesso de 72% em 30 dias e recorrência de 41% em 5 anos.\"\n\nQuero usar esse parágrafo no meu trabalho de conclusão de residência.",
+      "expected_output": "Análise nos 5 passos: verificar dados do CODA trial (publicado NEJM 2020 - dado real mas taxa de sucesso e recorrência precisam ser checadas nos números exatos), taxa de conversão e mortalidade são epidemiológicas a confirmar. Risco MÉDIO pois é texto acadêmico, não conduta direta. Recomendar leitura do artigo original antes de citar."
+    },
+    {
+      "id": 3,
+      "prompt": "Checa esse output de IA para eu colocar no prontuário:\n\n\"Paciente em POI de herniorrafia inguinal por Lichtenstein. Sem intercorrências. Alta hospitalar prevista para amanhã. Dieta livre. Orientado sobre restrição de esforço físico por 4 semanas e retorno em 30 dias para retirada de pontos com fio de sutura não absorvível.\"\n\nFoi feita a cirurgia ontem, cirurgia laparoscópica por TEP, fio Vicryl.",
+      "expected_output": "Análise nos 5 passos: deve identificar inconsistências (texto diz Lichtenstein/aberta mas foi TEP laparoscópico, fio não absorvível mas foi Vicryl que é absorvível, não menciona o acesso laparoscópico). Risco MÉDIO-ALTO pois é registro em prontuário com informações erradas sobre técnica cirúrgica usada."
+    }
+  ]
+}
