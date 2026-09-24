@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>__TITULO__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta:#1B2430; --tinta-2:#4A5766; --tinta-3:#7C8794;
+  --papel:#F5F6F4; --papel-2:#FFFFFF; --nevoa:#DCE0DD;
+  --vinho:#7A1420; --vinho-luz:#F3E4E5;
+  --verde:#176B54; --verde-luz:#E2F0EA;
+  --ocre:#9A6B08; --ocre-luz:#FBF0D4;
+  --ambar:#8A5A00; --ambar-luz:#FDF1DA;
+  --roxo:#5B3A9B;  --roxo-luz:#EFE9FA;
+  --sangue:#6A0F17;
+  --esc:1;
+  --serif:"Newsreader",Charter,"Iowan Old Style",Georgia,serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--papel);color:var(--tinta);font-family:var(--sans);
+  font-size:16px;line-height:1.5;padding-bottom:env(safe-area-inset-bottom)}
+b{font-weight:600;color:var(--tinta)}
+i{font-style:italic}
+mark.hl{background:#FBEEB0;color:inherit;padding:.05em .18em;border-radius:2px}
+mark.trap{background:var(--vinho-luz);color:var(--vinho);font-weight:600;padding:.05em .18em;border-radius:2px}
+b.tag-orf{font-family:var(--sans);font-size:11px;font-weight:600;background:#EDE7F6;color:#4A2E86;
+  padding:.15em .45em;border-radius:3px;vertical-align:.08em}
+:focus-visible{outline:2.5px solid var(--vinho);outline-offset:2px;border-radius:3px}
+
+/* rail */
+#rail{position:sticky;top:0;z-index:50;background:var(--papel);border-bottom:1px solid var(--nevoa);
+  padding:8px 14px 0;padding-top:calc(8px + env(safe-area-inset-top))}
+#railtop{display:flex;align-items:baseline;gap:10px;font-size:12.5px;color:var(--tinta-3);height:22px}
+#railtop .now{color:var(--tinta);font-weight:600;font-size:13px}
+#railtop .sp{flex:1}
+#railtop button{font:inherit;font-size:12.5px;background:none;border:none;color:var(--vinho);
+  font-weight:600;cursor:pointer;padding:2px 0}
+#segs{display:flex;gap:2px;padding:8px 0 9px}
+#segs .s{flex:1;height:4px;background:var(--nevoa);border-radius:1px;cursor:pointer;
+  border:none;padding:0;transition:background .18s}
+#segs .s.ok{background:var(--verde)}
+#segs .s.no{background:var(--vinho)}
+#segs .s.cur{box-shadow:0 0 0 2px var(--papel),0 0 0 3.5px var(--tinta)}
+
+main{max-width:700px;margin:0 auto;padding:0 16px 132px}
+
+/* grifo do usuário */
+[data-hz]{-webkit-user-select:text;user-select:text}
+mark.um{background:#FCE96A;color:inherit;padding:.05em .12em;border-radius:2px;
+  cursor:pointer;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+mark.um:hover{background:#F7DC33}
+.umdemo{background:#FCE96A;padding:.05em .12em;border-radius:2px}
+#pen{position:fixed;z-index:90;display:none;gap:6px;transform:translate(-50%,-100%)}
+#pen.on{display:flex}
+#pen button{font:inherit;font-family:var(--sans);font-size:13px;font-weight:600;
+  padding:8px 13px;border-radius:6px;border:1px solid var(--tinta);
+  background:var(--tinta);color:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(27,36,48,.28)}
+.clearmk{display:block;margin:10px 0 0;font:inherit;font-size:12.5px;font-weight:600;
+  background:none;border:none;color:var(--vinho);cursor:pointer;padding:2px 0}
+.pentip{font-size:calc(12.5px * var(--esc));color:var(--tinta-3);margin:14px 0 0;line-height:1.5}
+
+/* tamanho do texto */
+.zoom{display:flex;gap:4px;align-items:center;flex:0 0 auto}
+#railtop .zoom button,.capazoom .zoom button{
+  font:inherit;font-family:var(--sans);font-weight:700;line-height:1;
+  border:1px solid var(--nevoa);background:var(--papel-2);color:var(--tinta);
+  border-radius:4px;cursor:pointer;padding:5px 9px;font-size:12.5px}
+#railtop .zoom button:hover:not([disabled]),.capazoom .zoom button:hover:not([disabled]){
+  border-color:var(--tinta);background:var(--tinta);color:#fff}
+#railtop .zoom button[disabled],.capazoom .zoom button[disabled]{
+  opacity:.32;cursor:not-allowed;color:var(--tinta-3)}
+#railtop .zoom .aa,.capazoom .zoom .aa{font-size:15px;padding:3px 9px 4px}
+.zoom .lbl{font-size:11.5px;color:var(--tinta-3);margin-right:2px}
+.capazoom{display:flex;align-items:center;gap:8px;margin:22px 0 0;padding-top:16px;
+  border-top:1px solid var(--nevoa);font-size:13.5px;color:var(--tinta-2)}
+.capazoom .zoom{margin-left:auto}
+#rarea{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.view{display:none}
+.view.on{display:block}
+
+/* capa */
+.capa{padding:44px 0 0}
+.capa .kicker{font-size:13px;color:var(--vinho);font-weight:600}
+.capa h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,9vw,52px);
+  line-height:1.04;letter-spacing:-.02em;margin:10px 0 0}
+.capa h1 em{font-style:italic;color:var(--vinho)}
+.capa .sub{font-family:var(--serif);font-size:calc(19px * var(--esc));line-height:1.45;color:var(--tinta-2);
+  margin:16px 0 0;max-width:34em}
+.stats{display:flex;flex-wrap:wrap;margin:30px 0 0;border-top:1px solid var(--nevoa)}
+.stats div{flex:1 1 33%;min-width:96px;padding:13px 0 14px;border-bottom:1px solid var(--nevoa)}
+.stats .v{font-family:var(--serif);font-size:27px;font-weight:500;line-height:1}
+.stats .k{font-size:12px;color:var(--tinta-3);margin-top:5px}
+.howto{margin:26px 0 0;font-size:calc(14.5px * var(--esc));color:var(--tinta-2);line-height:1.62;max-width:36em}
+.howto p{margin:0 0 11px}
+.howto b{color:var(--tinta)}
+
+/* questão */
+.qhead{padding:22px 0 0;display:flex;align-items:baseline;gap:12px}
+.qnum{font-family:var(--serif);font-size:44px;font-weight:500;line-height:.9;color:var(--vinho)}
+.qmeta{font-size:calc(13px * var(--esc));color:var(--tinta-3);line-height:1.35}
+.qmeta b{display:block;color:var(--tinta-2);font-weight:600;font-size:calc(13.5px * var(--esc))}
+.stem{font-family:var(--serif);font-size:calc(18.5px * var(--esc));line-height:1.6;margin:20px 0 0}
+.stem p{margin:0 0 13px}
+.stem b{font-weight:700;color:var(--tinta)}
+.alt .txt b{font-weight:600}
+.why b{font-weight:600;color:var(--tinta)}
+.pearl .body b{font-weight:600}
+.ask{font-size:calc(16px * var(--esc));font-weight:600;margin:18px 0 4px}
+
+.conf{margin:18px 0 6px}
+.conf .lbl{font-size:calc(13.5px * var(--esc));color:var(--tinta-2);margin-bottom:9px}
+.confbtns{display:flex;gap:7px}
+.confbtns button{flex:1;font:inherit;font-size:calc(13.5px * var(--esc));font-weight:500;padding:11px 4px;cursor:pointer;
+  background:var(--papel-2);border:1px solid var(--nevoa);border-radius:5px;color:var(--tinta-2)}
+.confbtns button.on{background:var(--tinta);border-color:var(--tinta);color:#fff;font-weight:600}
+.confmark{font-size:calc(13px * var(--esc));color:var(--tinta-3);margin:16px 0 2px}
+.confmark b{color:var(--tinta-2)}
+
+.alts{list-style:none;margin:0;padding:0}
+.alts li{position:relative}
+.kill{position:absolute;top:9px;right:9px;z-index:3;width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  font:inherit;font-family:var(--sans);font-size:14px;font-weight:700;line-height:1;
+  border:1px solid var(--nevoa);background:var(--papel-2);color:var(--tinta-3);
+  border-radius:5px;cursor:pointer;padding:0}
+.kill:hover{border-color:var(--vinho);color:var(--vinho)}
+.kill.undo{border-color:var(--tinta-3);color:var(--tinta-2)}
+.alt.cutable{padding-right:50px}
+.alt.cut .let,.alt.cut .astmt{text-decoration:line-through;
+  text-decoration-thickness:1.5px;text-decoration-color:var(--tinta-3)}
+.alt.cutable.cut{opacity:.46;background:var(--papel)}
+.alt.cut:not(.cutable){opacity:1}
+.flash .cutwarn{display:block;font-weight:400;font-size:calc(13.5px * var(--esc));
+  color:var(--tinta-2);margin-top:3px}
+.alt{display:flex;gap:12px;width:100%;text-align:left;font:inherit;
+  background:var(--papel-2);border:1px solid var(--nevoa);border-left:3px solid var(--nevoa);
+  border-radius:5px;padding:13px 14px;margin:9px 0 0;cursor:pointer;
+  transition:border-color .15s,background .15s}
+.alt:hover{border-color:var(--tinta-3)}
+.alt:disabled{opacity:1;color:inherit}
+.alt .let{font-weight:700;font-size:14px;color:var(--tinta-3);min-width:15px;line-height:1.5}
+.alt .txt{flex:1;font-size:calc(15.2px * var(--esc));line-height:1.5}
+.locked .alt{cursor:default}
+.alt.right{border-left-color:var(--verde);background:var(--verde-luz);border-color:#BFDCD0}
+.alt.right .let{color:var(--verde)}
+.alt.wrong{border-left-color:var(--vinho);background:var(--vinho-luz);border-color:#E6C9CC}
+.alt.wrong .let{color:var(--vinho)}
+.alt .mark{margin-left:4px;font-size:13px;font-weight:700}
+.alt .verdict{display:block;font-size:calc(13px * var(--esc));font-weight:600;margin:9px 0 3px;color:var(--tinta-3)}
+.alt .verdict.v-ok{color:var(--verde)}
+.alt .verdict.v-trap{color:var(--ambar)}
+.alt .verdict.v-danger{color:var(--sangue)}
+.alt .verdict.v-over{color:var(--roxo)}
+.alt.k-trap{border-left-color:var(--ambar)}
+.alt.k-danger{border-left-color:var(--sangue);border-left-width:5px}
+.alt.k-over{border-left-color:var(--roxo)}
+.alt.k-plain{border-left-color:var(--nevoa)}
+.chip{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.02em;
+  padding:.18em .5em;border-radius:3px;margin-right:6px;vertical-align:.09em}
+.chip.trap{background:var(--ambar-luz);color:var(--ambar)}
+.chip.danger{background:var(--vinho-luz);color:var(--sangue)}
+.chip.over{background:var(--roxo-luz);color:var(--roxo)}
+.legend{margin:14px 0 0;padding:12px 13px;background:var(--papel-2);border:1px solid var(--nevoa);
+  border-radius:5px;font-size:calc(12.8px * var(--esc));color:var(--tinta-2);line-height:1.7}
+.legend b{display:block;font-size:12.5px;color:var(--tinta);margin-bottom:6px}
+.legend .r{display:inline-block;width:3px;height:11px;border-radius:1px;
+  vertical-align:-1px;margin-right:6px}
+.alt .why{font-size:calc(14.2px * var(--esc));line-height:1.58;color:#39434F}
+
+/* aviso instantâneo */
+.flash{display:flex;align-items:center;gap:9px;margin:16px 0 2px;padding:11px 13px;
+  border-radius:5px;font-size:calc(15px * var(--esc));font-weight:600}
+.flash.ok{background:var(--verde-luz);color:var(--verde);border:1px solid #BFDCD0}
+.flash.no{background:var(--vinho-luz);color:var(--vinho);border:1px solid #E6C9CC}
+.flash .sym{font-size:17px}
+.flash .sm{font-weight:400;color:var(--tinta-2);font-size:14px}
+
+.pearl{margin:22px 0 0;background:var(--papel-2);border:1px solid var(--nevoa);
+  border-top:3px solid var(--ocre);border-radius:0 0 5px 5px;padding:15px 16px}
+.pearl .lbl{font-size:12.5px;font-weight:600;color:var(--ocre);margin-bottom:7px}
+.pearl .body{font-size:calc(15px * var(--esc));line-height:1.58}
+
+/* barra */
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--papel);
+  border-top:1px solid var(--nevoa);padding:11px 16px;
+  padding-bottom:calc(11px + env(safe-area-inset-bottom))}
+#barin{max-width:700px;margin:0 auto;display:flex;gap:9px;align-items:center}
+#barin .hint{flex:1;text-align:center;font-size:13.5px;color:var(--tinta-3)}
+.btn{font:inherit;font-size:15px;font-weight:600;padding:13px 20px;border-radius:6px;
+  border:1px solid var(--tinta);background:var(--tinta);color:#fff;cursor:pointer;flex:1}
+.btn[disabled]{opacity:.32;cursor:not-allowed}
+.btn.ghost{background:none;color:var(--tinta);flex:0 0 auto;border-color:var(--nevoa);padding:13px 15px}
+.btn.wine{background:var(--vinho);border-color:var(--vinho)}
+
+/* resultado */
+.res{padding:34px 0 0}
+.score{display:flex;align-items:flex-end;gap:14px}
+.score .big{font-family:var(--serif);font-size:78px;line-height:.86;font-weight:500}
+.score .of{font-size:15px;color:var(--tinta-3);padding-bottom:8px}
+.faixa{margin:16px 0 0;padding:14px 15px;border-radius:5px;font-size:calc(15px * var(--esc));line-height:1.55}
+.faixa.a{background:var(--verde-luz);border:1px solid #BFDCD0}
+.faixa.b{background:var(--ocre-luz);border:1px solid #EBDCA8}
+.faixa.c{background:var(--vinho-luz);border:1px solid #E6C9CC}
+h2.sec{font-family:var(--serif);font-size:23px;font-weight:500;margin:38px 0 4px}
+p.seclead{font-size:calc(14px * var(--esc));color:var(--tinta-2);margin:0 0 14px;line-height:1.55;max-width:38em}
+table.mx{width:100%;border-collapse:collapse;font-size:calc(14px * var(--esc))}
+table.mx th,table.mx td{padding:11px 9px;text-align:left;border-bottom:1px solid var(--nevoa)}
+table.mx th{font-size:12.5px;color:var(--tinta-3);font-weight:600}
+table.mx td.n{font-family:var(--serif);font-size:21px;font-weight:500;text-align:center;width:19%}
+table.mx tr.danger td{background:var(--vinho-luz)}
+table.mx tr.danger td.n{color:var(--vinho)}
+.mxnote{font-size:calc(13.5px * var(--esc));color:var(--tinta-2);margin:11px 0 0;line-height:1.55}
+.areas div{display:flex;align-items:center;gap:11px;padding:9px 0;
+  border-bottom:1px solid var(--nevoa);font-size:calc(14px * var(--esc))}
+.areas .nm{flex:1}
+.areas .bar{width:88px;height:6px;background:var(--nevoa);border-radius:1px;overflow:hidden}
+.areas .bar i{display:block;height:100%;background:var(--verde)}
+.areas .fr{font-size:13px;color:var(--tinta-3);min-width:34px;text-align:right}
+.grid23{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin-top:6px}
+.grid23 button{font:inherit;font-size:14px;font-weight:600;padding:11px 0;border-radius:4px;
+  cursor:pointer;border:1px solid var(--nevoa);background:var(--papel-2);color:var(--tinta-2)}
+.grid23 button.ok{background:var(--verde-luz);border-color:#BFDCD0;color:var(--verde)}
+.grid23 button.no{background:var(--vinho-luz);border-color:#E6C9CC;color:var(--vinho)}
+.gap{margin:34px 0 0;padding:16px 0 0;border-top:1px solid var(--nevoa);font-size:calc(14px * var(--esc));
+  color:var(--tinta-2);line-height:1.6}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (min-width:640px){.qnum{font-size:52px}.stem{font-size:calc(19px * var(--esc))}}
+</style>
+</head>
+<body>
+
+<div id="rail" hidden>
+  <div id="railtop">
+    <span class="now" id="rnow"></span>
+    <span id="rarea"></span>
+    <button id="rres" hidden>Ver resultado</button>
+    <span class="zoom">
+      <button type="button" id="zm" aria-label="Diminuir o texto">A&#8722;</button>
+      <button type="button" class="aa" id="zp" aria-label="Aumentar o texto">A+</button>
+    </span>
+    <span id="rtimer"></span>
+  </div>
+  <div id="segs"></div>
+</div>
+
+<main>
+  <section class="view on" id="v-capa"></section>
+  <section class="view" id="v-q"></section>
+  <section class="view" id="v-res"></section>
+</main>
+
+<div id="pen"><button type="button" id="penbtn">Grifar</button></div>
+<div id="bar" hidden><div id="barin"></div></div>
+
+<script>
+const CFG = __CFG__;
+const Q = __DATA__;
+const LETTERS = ['A','B','C','D'];
+const CONF = [['certeza','Certeza'],['duvida','Dúvida entre duas'],['chute','Chute'],['nao','Não marcada']];
+const KEY = CFG.chave;
+
+let state = { answers:{}, conf:{}, idx:0, started:null, elapsed:0, done:false, esc:1,
+               marks:{}, cuts:{}, penSeen:false };
+const ESC = [0.88, 1, 1.14, 1.3, 1.5];
+let mode = 'capa';
+let reviewOnly = false;
+let tick = null;
+
+async function save(){ try{ await window.storage.set(KEY, JSON.stringify(state)); }catch(e){} }
+async function load(){
+  try{ const r = await window.storage.get(KEY); if(r && r.value) return JSON.parse(r.value); }catch(e){}
+  return null;
+}
+
+/* Que tipo de erro é este? A régua lateral e a etiqueta codificam isso. */
+function verdictKind(v, isCorrect){
+  if(isCorrect) return 'ok';
+  const t = (v||'').toLowerCase();
+  if(t.includes('armadilha') || t.includes('tentadora')) return 'trap';
+  if(t.includes('perigosa') || t.includes('mata') || t.includes('catastr')
+     || t.includes('maior consequ')) return 'danger';
+  if(t.includes('excesso')) return 'over';
+  return 'plain';
+}
+const CHIP = { trap:'armadilha', danger:'erro grave', over:'sobretratamento' };
+
+const $ = s => document.querySelector(s);
+
+/* ---------- tamanho do texto ---------- */
+function escIndex(){
+  let i = ESC.indexOf(state.esc);
+  return i < 0 ? 1 : i;
+}
+function applyEsc(){
+  document.documentElement.style.setProperty('--esc', state.esc);
+  const i = escIndex();
+  [['#zm','#zp'],['#czm','#czp']].forEach(([a,b])=>{
+    const m = $(a), p = $(b);
+    if(m) m.disabled = (i === 0);
+    if(p) p.disabled = (i === ESC.length-1);
+  });
+  const l = $('#zlbl');
+  if(l) l.textContent = Math.round(state.esc*100) + '%';
+}
+function stepEsc(d){
+  const i = Math.max(0, Math.min(ESC.length-1, escIndex()+d));
+  state.esc = ESC[i]; applyEsc(); save();
+}
+function wireZoom(){
+  [['#zm',-1],['#zp',1],['#czm',-1],['#czp',1]].forEach(([sel,d])=>{
+    const b = $(sel); if(b) b.onclick = ()=> stepEsc(d);
+  });
+  applyEsc();
+}
+
+/* Risca ou restaura uma alternativa, sem perder a posição da tela. */
+function toggleCut(q, L){
+  const list = state.cuts[q.n] = state.cuts[q.n] || [];
+  const i = list.indexOf(L);
+  if(i < 0) list.push(L); else list.splice(i, 1);
+  if(!list.length) delete state.cuts[q.n];
+  const y = window.scrollY;
+  save(); renderQ(); window.scrollTo(0, y);
+}
+
+/* ---------- grifo ---------- */
+const nMarks = n => Object.values(state.marks[n]||{}).reduce((a,v)=>a+v.length,0);
+
+/* Deslocamento de um ponto da seleção dentro da zona, em caracteres. */
+function offsetIn(zone, node, off){
+  if(node.nodeType !== 3){
+    if(!zone.contains(node)) return -1;
+    const r = document.createRange();
+    r.selectNodeContents(zone); r.setEnd(node, off);
+    return r.toString().length;
+  }
+  const w = document.createTreeWalker(zone, NodeFilter.SHOW_TEXT);
+  let pos = 0;
+  while(w.nextNode()){
+    if(w.currentNode === node) return pos + off;
+    pos += w.currentNode.nodeValue.length;
+  }
+  return -1;
+}
+
+/* Envolve [s,e) em <mark>, atravessando negritos e grifos já existentes. */
+function wrapRange(zone, s, e, idx){
+  const w = document.createTreeWalker(zone, NodeFilter.SHOW_TEXT);
+  let pos = 0; const hits = [];
+  while(w.nextNode()){
+    const nd = w.currentNode, len = nd.nodeValue.length;
+    const a = Math.max(s, pos), b = Math.min(e, pos + len);
+    if(a < b) hits.push([nd, a - pos, b - pos]);
+    pos += len;
+  }
+  for(let i = hits.length - 1; i >= 0; i--){
+    const [nd, a, b] = hits[i];
+    const r = document.createRange();
+    r.setStart(nd, a); r.setEnd(nd, b);
+    const m = document.createElement('mark');
+    m.className = 'um'; m.dataset.r = idx;
+    m.appendChild(r.extractContents());
+    r.insertNode(m);
+  }
+}
+
+function paintZone(zone, qn){
+  const key = zone.dataset.hz;
+  if(zone.dataset.orig === undefined) zone.dataset.orig = zone.innerHTML;
+  zone.innerHTML = zone.dataset.orig;
+  const rs = (state.marks[qn]||{})[key] || [];
+  for(let i = rs.length - 1; i >= 0; i--) wrapRange(zone, rs[i][0], rs[i][1], i);
+  zone.querySelectorAll('mark.um').forEach(m=>{
+    m.onclick = ev=>{
+      ev.stopPropagation(); ev.preventDefault();
+      state.marks[qn][key].splice(+m.dataset.r, 1);
+      if(!state.marks[qn][key].length) delete state.marks[qn][key];
+      paintZone(zone, qn); save(); refreshClear(qn);
+    };
+  });
+}
+
+function paintMarks(q){
+  $('#v-q').querySelectorAll('[data-hz]').forEach(z=> paintZone(z, q.n));
+  refreshClear(q.n);
+}
+
+function refreshClear(qn){
+  const old = $('#v-q').querySelector('.clearmk');
+  if(old) old.remove();
+  if(!nMarks(qn)) return;
+  const b = document.createElement('button');
+  b.type='button'; b.className='clearmk';
+  b.textContent = 'Apagar os grifos desta questão';
+  b.onclick = ()=>{ delete state.marks[qn];
+    $('#v-q').querySelectorAll('[data-hz]').forEach(z=> paintZone(z, qn));
+    save(); refreshClear(qn); };
+  $('#v-q').appendChild(b);
+}
+
+/* Botão flutuante que aparece quando há texto selecionado dentro de uma zona. */
+let penTarget = null;
+function updatePen(){
+  const pen = $('#pen');
+  const sel = window.getSelection();
+  if(mode!=='q' || !sel || sel.isCollapsed || !sel.rangeCount){ pen.classList.remove('on'); return; }
+  const r = sel.getRangeAt(0);
+  const zone = (r.commonAncestorContainer.nodeType===3
+      ? r.commonAncestorContainer.parentElement
+      : r.commonAncestorContainer).closest('[data-hz]');
+  if(!zone || !$('#v-q').contains(zone)){ pen.classList.remove('on'); return; }
+  const s = offsetIn(zone, r.startContainer, r.startOffset);
+  const e = offsetIn(zone, r.endContainer, r.endOffset);
+  if(s < 0 || e < 0 || e - s < 2){ pen.classList.remove('on'); return; }
+  penTarget = { zone, s, e };
+  const box = r.getBoundingClientRect();
+  pen.style.left = Math.min(Math.max(box.left + box.width/2, 62), innerWidth-62) + 'px';
+  // acima da seleção; se não couber, encosta no topo ou logo abaixo do trecho
+  let top = box.top - 8;
+  if(top < 58) top = Math.min(box.bottom + 46, innerHeight - 78);
+  pen.style.top = Math.min(Math.max(top, 58), innerHeight - 78) + 'px';
+  pen.classList.add('on');
+}
+
+function doMark(){
+  if(!penTarget) return;
+  const q = Q[state.idx], key = penTarget.zone.dataset.hz;
+  const m = (state.marks[q.n] = state.marks[q.n] || {});
+  const list = (m[key] = m[key] || []).concat([[penTarget.s, penTarget.e]]);
+  list.sort((a,b)=>a[0]-b[0]);
+  const out = [];
+  list.forEach(r=>{
+    const last = out[out.length-1];
+    if(last && r[0] <= last[1]) last[1] = Math.max(last[1], r[1]);
+    else out.push(r.slice());
+  });
+  m[key] = out;
+  state.penSeen = true;
+  window.getSelection().removeAllRanges();
+  $('#pen').classList.remove('on');
+  paintZone(penTarget.zone, q.n);
+  const tip = $('#v-q').querySelector('.pentip'); if(tip) tip.remove();
+  refreshClear(q.n); save();
+  penTarget = null;
+}
+
+const answered = n => state.answers[n] !== undefined;
+const correct  = n => state.answers[n] === Q.find(q=>q.n===n).correct;
+const countAnswered = () => Object.keys(state.answers).length;
+const fmtTime = ms => { const s=Math.floor(ms/1000); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+const totalElapsed = () => state.elapsed + (state.started ? Date.now()-state.started : 0);
+
+/* ---------- capa ---------- */
+function renderCapa(){
+  $('#v-capa').innerHTML = `<div class="capa">
+    <div class="kicker">${CFG.kicker}</div>
+    <h1>${CFG.titulo}<br><em>${CFG.subtitulo}</em></h1>
+    <p class="sub">${CFG.resumo}</p>
+    <div class="stats">` +
+      CFG.numeros.map(([v,k])=>`<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('') +
+    `</div>
+    <div class="howto">` + CFG.instrucoes.map(t=>'<p>'+t+'</p>').join('') + `
+      <div class="capazoom"><span>Tamanho do texto</span>
+        <span class="zoom">
+          <span class="lbl" id="zlbl"></span>
+          <button type="button" id="czm" aria-label="Diminuir o texto">A&#8722;</button>
+          <button type="button" class="aa" id="czp" aria-label="Aumentar o texto">A+</button>
+        </span>
+      </div>
+    </div>
+  </div>`;
+  wireZoom();
+}
+
+/* ---------- rail ---------- */
+function drawRail(){
+  const rail = $('#rail');
+  rail.hidden = (mode === 'capa');
+  if(mode === 'capa') return;
+  const segs = $('#segs');
+  if(segs.children.length !== Q.length){
+    segs.innerHTML = '';
+    Q.forEach((q,i)=>{
+      const b = document.createElement('button');
+      b.className='s'; b.type='button';
+      b.setAttribute('aria-label','Ir para a questão '+q.n);
+      b.onclick = ()=>{ reviewOnly=false; state.idx=i; mode='q'; render(); window.scrollTo({top:0}); };
+      segs.appendChild(b);
+    });
+  }
+  [...segs.children].forEach((el,i)=>{
+    const n = Q[i].n;
+    el.className = 's' + (answered(n) ? (correct(n)?' ok':' no') : '')
+                       + (mode==='q' && i===state.idx ? ' cur' : '');
+  });
+  $('#rnow').textContent = mode==='res' ? 'Resultado' : ('Questão ' + Q[state.idx].n);
+  $('#rarea').textContent = mode==='res' ? '' : Q[state.idx].area;
+  $('#rtimer').textContent = fmtTime(totalElapsed());
+  $('#rres').hidden = !(countAnswered()===Q.length && mode==='q');
+  $('#rres').onclick = finish;
+}
+
+/* ---------- questão ---------- */
+function renderQ(){
+  const q = Q[state.idx];
+  const shown = answered(q.n);
+  const pick = state.answers[q.n];
+  const conf = state.conf[q.n];
+  const hit = shown && pick === q.correct;
+  const cuts = state.cuts[q.n] || [];
+
+  let h = `<div class="qhead">
+      <div class="qnum">${q.n}</div>
+      <div class="qmeta"><b>${q.sub}</b>${q.area}</div>
+    </div>
+    <div class="stem">${q.stem.map((p,i)=>`<p data-hz="s${i}">${p}</p>`).join('')}</div>
+    <p class="ask" data-hz="ask">${q.ask}</p>`;
+
+  if(!shown){
+    h += `<div class="conf"><div class="lbl">Antes de responder, quanta confiança você tem?</div>
+      <div class="confbtns">` +
+      CONF.filter(c=>c[0]!=='nao').map(([k,lab])=>
+        `<button type="button" data-c="${k}"${conf===k?' class="on"':''}>${lab}</button>`).join('') +
+      `</div></div>`;
+  } else {
+    h += `<div class="flash ${hit?'ok':'no'}"><span class="sym">${hit?'✓':'✕'}</span>
+      <span>${hit ? 'Certo' : 'Errado — a resposta é '+q.correct}
+      ${conf && conf!=='nao' ? `<span class="sm"> · você marcou ${CONF.find(c=>c[0]===conf)[1].toLowerCase()}</span>` : ''}
+      ${cuts.includes(q.correct) ? '<span class="cutwarn">Você tinha riscado a alternativa certa.</span>' : ''}
+      </span></div>`;
+  }
+
+  h += `<ul class="alts${shown?' locked':''}">`;
+  LETTERS.forEach(L=>{
+    const a = q.analysis[L];
+    const kind = shown ? verdictKind(a.verdict, L===q.correct) : null;
+    let cls='alt';
+    if(cuts.includes(L)) cls += ' cut';
+    if(shown){
+      cls += ' k-'+kind;
+      if(L===q.correct) cls+=' right';
+      else if(L===pick) cls+=' wrong';
+    } else cls += ' cutable';
+    const mk = shown && L===q.correct ? '<span class="mark">✓</span>'
+             : shown && L===pick      ? '<span class="mark">✕</span>' : '';
+    const chip = shown && CHIP[kind] ? `<span class="chip ${kind}">${CHIP[kind]}</span>` : '';
+    h += `<li><button type="button" class="${cls}" data-l="${L}" ${shown?'aria-disabled="true"':''}>
+        <span class="let">${L}${mk}</span>
+        <span class="txt"><span class="astmt" data-hz="a${L}">${q.alts[L]}</span>
+        ${shown ? `<span class="verdict v-${kind}">${chip}${a.verdict}</span>
+                   <span class="why" data-hz="w${L}">${a.text}</span>` : ''}
+        </span></button>${shown ? '' : `<button type="button" class="kill${
+          cuts.includes(L)?' undo':''}" data-k="${L}" aria-label="${
+          cuts.includes(L)?'Restaurar':'Riscar'} a alternativa ${L}">${
+          cuts.includes(L)?'&#8634;':'&#10005;'}</button>`}</li>`;
+  });
+  h += '</ul>';
+
+  if(shown){
+    h += `<div class="pearl"><div class="lbl">Pérola</div><div class="body" data-hz="p">${q.pearl}</div></div>`;
+    if(countAnswered() <= 1) h += `<div class="legend"><b>O que as cores querem dizer</b>
+      <span class="r" style="background:var(--verde)"></span>alternativa correta<br>
+      <span class="r" style="background:var(--ambar)"></span>armadilha — a errada que mais atrai<br>
+      <span class="r" style="background:var(--sangue)"></span>erro grave — a que causa dano<br>
+      <span class="r" style="background:var(--roxo)"></span>sobretratamento — certa demais<br>
+      <span class="r" style="background:var(--nevoa)"></span>errada simples<br>
+      <span style="text-decoration:line-through;text-decoration-thickness:1.5px">alternativa riscada</span> — você a eliminou; toque no ↺ para restaurar<br>
+      <b style="display:inline;font-weight:700">negrito</b> no enunciado marca o dado que decide a questão. O <span class="umdemo">grifo amarelo</span> é seu — na pérola, o amarelo mais claro é a regra que você precisa levar.
+      </div>`;
+  }
+
+  $('#v-q').innerHTML = h;
+
+  paintMarks(q);
+  if(!nMarks(q.n) && !state.penSeen){
+    const tip = document.createElement('p');
+    tip.className = 'pentip';
+    tip.textContent = 'Para grifar, selecione um trecho do enunciado ou de uma alternativa e toque em Grifar. Toque num grifo seu para apagá-lo.';
+    $('#v-q').appendChild(tip);
+  }
+
+  $('#v-q').querySelectorAll('.alt').forEach(b=>{
+    b.onclick = ()=>{
+      const sel = window.getSelection();
+      if(sel && !sel.isCollapsed) return;   // estava selecionando texto, não respondendo
+      if((state.cuts[q.n]||[]).includes(b.dataset.l)) return;  // riscada: restaure antes
+      answer(q, b.dataset.l, b);
+    };
+  });
+  $('#v-q').querySelectorAll('.kill').forEach(b=>{
+    b.onclick = ev=>{ ev.stopPropagation(); toggleCut(q, b.dataset.k); };
+  });
+  $('#v-q').querySelectorAll('.confbtns button').forEach(b=>{
+    b.onclick = ()=>{
+      state.conf[q.n] = b.dataset.c;
+      $('#v-q').querySelectorAll('.confbtns button').forEach(x=>x.classList.toggle('on', x===b));
+      save();
+    };
+  });
+}
+
+/* Responde e revela na hora, mantendo a alternativa tocada na mesma altura da tela. */
+function answer(q, letter, el){
+  if(answered(q.n)) return;
+  const before = el ? el.getBoundingClientRect().top : null;
+  if(!state.conf[q.n]) state.conf[q.n] = 'nao';
+  state.answers[q.n] = letter;
+  save(); render();
+  if(before !== null){
+    const now = $('#v-q').querySelector('.alt[data-l="'+letter+'"]');
+    if(now) window.scrollBy(0, now.getBoundingClientRect().top - before);
+  }
+}
+
+/* ---------- barra ---------- */
+function drawBar(){
+  const bar = $('#bar'), inn = $('#barin');
+  bar.hidden = false;
+
+  if(mode === 'capa'){
+    const resume = countAnswered() > 0;
+    inn.innerHTML = `<button class="btn wine" id="go">${resume?'Continuar de onde parei':'Começar o simulado'}</button>`;
+    $('#go').onclick = ()=>{
+      if(resume){ const nx = Q.findIndex(q=>!answered(q.n)); state.idx = nx<0?0:nx; }
+      mode='q'; startClock(); render();
+    };
+    return;
+  }
+
+  if(mode === 'res'){
+    const errs = Q.filter(q=>!correct(q.n));
+    inn.innerHTML = (errs.length ? `<button class="btn" id="rev">Revisar os ${errs.length} erros</button>` : '')
+                  + `<button class="btn ghost" id="restart">Recomeçar</button>`;
+    if(errs.length) $('#rev').onclick = ()=>{
+      reviewOnly = true; state.idx = Q.indexOf(errs[0]); mode='q'; render(); window.scrollTo({top:0});
+    };
+    $('#restart').onclick = ()=>{
+      if(!confirm('Isso apaga todas as respostas deste simulado. Recomeçar?')) return;
+      state = { answers:{}, conf:{}, idx:0, started:null, elapsed:0, done:false,
+                esc:state.esc, marks:{}, cuts:{}, penSeen:state.penSeen };
+      reviewOnly=false; mode='capa'; save(); render();
+    };
+    return;
+  }
+
+  const q = Q[state.idx];
+  const shown = answered(q.n);
+  const prev = `<button class="btn ghost" id="prev" ${state.idx===0?'disabled':''} aria-label="Questão anterior">‹</button>`;
+
+  if(!shown){
+    inn.innerHTML = prev
+      + `<span class="hint">Toque numa alternativa para responder</span>`
+      + `<button class="btn ghost" id="skip">Pular</button>`;
+    $('#skip').onclick = ()=>{
+      const nx = Q.findIndex((x,i)=> i>state.idx && !answered(x.n));
+      state.idx = nx<0 ? Math.min(state.idx+1, Q.length-1) : nx;
+      render(); window.scrollTo({top:0});
+    };
+  } else {
+    const nexts = reviewOnly ? Q.slice(state.idx+1).find(x=>!correct(x.n)) : Q[state.idx+1];
+    const label = nexts ? 'Próxima questão'
+                : (countAnswered()===Q.length ? 'Ver resultado' : 'Ir para as não respondidas');
+    inn.innerHTML = prev + `<button class="btn" id="next">${label}</button>`;
+    $('#next').onclick = ()=>{
+      if(nexts){ state.idx = Q.indexOf(nexts); render(); window.scrollTo({top:0}); }
+      else if(countAnswered()===Q.length){ finish(); }
+      else { state.idx = Q.findIndex(x=>!answered(x.n)); render(); window.scrollTo({top:0}); }
+    };
+  }
+  const p = $('#prev');
+  if(p) p.onclick = ()=>{ state.idx = Math.max(0,state.idx-1); render(); window.scrollTo({top:0}); };
+}
+
+/* ---------- resultado ---------- */
+function finish(){
+  state.done = true; reviewOnly = false; stopClock(); mode='res'; save(); render();
+  window.scrollTo({top:0});
+}
+
+function renderRes(){
+  const hits = Q.filter(q=>correct(q.n)).length;
+  const pct = Math.round(hits/Q.length*100);
+  const faixa = CFG.faixas.find(f=> hits >= f[0]) || CFG.faixas[CFG.faixas.length-1];
+  const fc = faixa[1], ft = faixa[2];
+
+  const mx = {}; CONF.forEach(([k])=> mx[k]={ok:0,no:0});
+  Q.forEach(q=>{ const c = state.conf[q.n]||'nao'; mx[c][correct(q.n)?'ok':'no']++; });
+
+  const ar = {};
+  Q.forEach(q=>{ (ar[q.area] = ar[q.area]||{ok:0,t:0}); ar[q.area].t++; if(correct(q.n)) ar[q.area].ok++; });
+  const arr = Object.entries(ar).sort((a,b)=> (a[1].ok/a[1].t)-(b[1].ok/b[1].t));
+
+  const disc = CFG.discriminam.numeros;
+  const discErr = disc.filter(n=>!correct(n));
+
+  let h = `<div class="res">
+    <div class="score"><div class="big">${hits}</div><div class="of">de ${Q.length} &nbsp;·&nbsp; ${pct}% &nbsp;·&nbsp; ${fmtTime(totalElapsed())}</div></div>
+    <div class="faixa ${fc}">${ft}</div>
+
+    <h2 class="sec">Confiança contra acerto</h2>
+    <p class="seclead">A nota esconde as duas coisas que mais importam: quando você errou tendo certeza, e quando acertou chutando. As duas são leituras falsas do seu preparo.</p>
+    <table class="mx"><thead><tr><th>Você marcou</th><th>Acertou</th><th>Errou</th><th></th></tr></thead><tbody>`;
+  CONF.forEach(([k,lab])=>{
+    if(mx[k].ok + mx[k].no === 0) return;
+    const danger = (k==='certeza' && mx[k].no>0);
+    const note = k==='certeza' ? (mx[k].no>0 ? 'erro com certeza — revise primeiro' : 'calibrado')
+               : k==='chute'  ? (mx[k].ok>0 ? mx[k].ok+' acerto(s) sem domínio real' : '')
+               : '';
+    h += `<tr class="${danger?'danger':''}"><td>${lab}</td>
+          <td class="n">${mx[k].ok}</td><td class="n">${mx[k].no}</td>
+          <td style="color:var(--tinta-3);font-size:13px">${note}</td></tr>`;
+  });
+  h += `</tbody></table>
+    <p class="mxnote">Os erros marcados como <b>certeza</b> vão primeiro para a ficha: são conceitos consolidados de forma errada, e não se corrigem repetindo flashcard.</p>
+
+    <h2 class="sec">Por área</h2><div class="areas">`;
+  arr.forEach(([nm,v])=>{
+    h += `<div><span class="nm">${nm}</span>
+      <span class="bar"><i style="width:${Math.round(v.ok/v.t*100)}%"></i></span>
+      <span class="fr">${v.ok}/${v.t}</span></div>`;
+  });
+  h += `</div>
+
+    <h2 class="sec">As que mais discriminam</h2>
+    <p class="seclead">${CFG.discriminam.texto} ${
+      discErr.length ? 'Você errou ' + discErr.map(n=>'Q'+n).join(', ') + '.'
+                     : 'Você acertou todas as ' + disc.length + '.'}</p>
+
+    <h2 class="sec">Todas as questões</h2>
+    <p class="seclead">Toque em qualquer número para reler o enunciado e a análise completa.</p>
+    <div class="grid23">` +
+    Q.map((q,i)=>`<button type="button" class="${correct(q.n)?'ok':'no'}" data-i="${i}">${q.n}</button>`).join('') +
+  `</div>
+    <div class="gap">${CFG.rodape}</div>
+  </div>`;
+
+  $('#v-res').innerHTML = h;
+  $('#v-res').querySelectorAll('.grid23 button').forEach(b=>{
+    b.onclick = ()=>{ reviewOnly=false; state.idx=+b.dataset.i; mode='q'; render(); window.scrollTo({top:0}); };
+  });
+}
+
+/* ---------- relógio ---------- */
+function startClock(){
+  if(state.done) return;
+  state.started = Date.now();
+  clearInterval(tick);
+  tick = setInterval(()=>{ if(mode!=='capa') $('#rtimer').textContent = fmtTime(totalElapsed()); }, 1000);
+}
+function stopClock(){
+  if(state.started){ state.elapsed += Date.now()-state.started; state.started=null; }
+  clearInterval(tick); tick=null;
+}
+
+function render(){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  $('#v-'+(mode==='q'?'q':mode==='res'?'res':'capa')).classList.add('on');
+  if(mode==='capa') renderCapa();
+  if(mode==='q') renderQ();
+  if(mode==='res') renderRes();
+  drawRail(); drawBar(); applyEsc(); save();
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='+' || e.key==='='){ stepEsc(1); return; }
+  if(e.key==='-' || e.key==='_'){ stepEsc(-1); return; }
+  if(mode!=='q') return;
+  if(e.key==='ArrowLeft'  && state.idx>0){ state.idx--; render(); window.scrollTo({top:0}); return; }
+  if(e.key==='ArrowRight' && state.idx<Q.length-1){ state.idx++; render(); window.scrollTo({top:0}); return; }
+  const L = e.key.toUpperCase();
+  if(LETTERS.includes(L)){
+    const q = Q[state.idx];
+    if(answered(q.n)) return;
+    if(e.shiftKey){ toggleCut(q, L); return; }
+    if((state.cuts[q.n]||[]).includes(L)) return;
+    answer(q, L, $('#v-q').querySelector('.alt[data-l="'+L+'"]'));
+  }
+});
+document.addEventListener('selectionchange', ()=> setTimeout(updatePen, 10));
+['mouseup','touchend'].forEach(ev=> document.addEventListener(ev, ()=> setTimeout(updatePen, 10)));
+document.addEventListener('scroll', ()=>{ if($('#pen').classList.contains('on')) updatePen(); }, true);
+$('#penbtn').addEventListener('mousedown', e=> e.preventDefault());
+$('#penbtn').addEventListener('click', doMark);
+
+window.addEventListener('beforeunload', stopClock);
+
+(async function init(){
+  const saved = await load();
+  if(saved && saved.answers){
+    state = Object.assign(state, saved);
+    state.started = null;
+    if(state.done) mode = 'res';
+  }
+  render();
+  if(mode==='q') startClock();
+})();
+</script>
+</body>
+</html>
